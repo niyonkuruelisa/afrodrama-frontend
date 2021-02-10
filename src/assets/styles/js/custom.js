@@ -3,10 +3,12 @@
 /*
 Version: 1.0
 */
-import $ from 'jquery'
+
+import * as $ from 'jquery';
 window.$ = $;
 var $window = $;
-import 'owl.carousel'
+
+setTimeout(function () {
 
 $("body").on("contextmenu",function(){
         
@@ -47,8 +49,7 @@ $("body").on("contextmenu",function(){
 //             return false;
 //          }
 //     });
-jQuery(document).ready(function(){
-  console.log("Tayali.")
+
   // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
   $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function(e) {
     if ($window.width() > 768) {
@@ -90,9 +91,8 @@ jQuery(document).ready(function(){
     });
   }
  
+}, 555*1.33); // 555ms timing to load jQuery.js + network estimated delay
 
-})
-setTimeout(function () {
   // Scroll to top button appear
   $(document).on('scroll', function() {
     var scrollDistance = $(this).scrollTop();
@@ -117,5 +117,3 @@ setTimeout(function () {
     $("body").toggleClass("sidebar-toggled");
     $(".sidebar").toggleClass("toggled");
   });
-}, 555*1.33); // 555ms timing to load jQuery.js + network estimated delay
-

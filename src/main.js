@@ -10,8 +10,9 @@ import store from './store'
 import './axios'
 Vue.config.productionTip = false
 require('@/store/subscriber')
-window.$ = window.jQuery = require('jquery');
 
+window.$ = window.jQuery = require('jquery');
+import 'bootstrap/dist/js/bootstrap'
 store.dispatch('auth/checkAuth', localStorage.getItem('token')).then(() => {
   //
   new Vue({

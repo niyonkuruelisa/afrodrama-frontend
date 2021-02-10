@@ -6,6 +6,9 @@ module.exports = {
           $: 'jquery',
           jquery: 'jquery',
           'window.jQuery': 'jquery',
+          'window.$': 'jquery',
+          'window.fn': 'owl.carousel',
+          'fn': 'owl.carousel',
           jQuery: 'jquery'
         })
       ]
