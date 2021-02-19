@@ -124,30 +124,80 @@
         </div>
         <div class="modal fade" id="PackageModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
-          <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+          <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header text-center">
                   <h5 class="modal-title" id="exampleModalLabel">Buy Subscription</h5>
                 </div>
                 <div class="modal-body">
-                  <div class="card text-white bg-danger o-hidden h-100 border-none" v-if="!pack.undefined">
-                    <div class="card-body">
-                      <div class="card-body-icon">
-                        <i class="fas fa-fw fa-play-circle"></i>
+                  <div v-if="!selectedSubscription" class="row">
+                    <div class="col-md-6 mb-2" v-for="(pack,index) in packs" :key="index">
+                      <div class="card text-white bg-primary o-hidden h-100 border-none " >
+                        <div class="card-body">
+                          <div class="card-body-icon">
+                            <i class="fas fa-fw fa-play-circle"></i>
+                          </div>
+                          <div class="text-center"><h1><b>{{ pack.amount }} RF</b></h1></div>
+                          <div class="text-center"><h1><b>{{pack.package_type === "Quarter" ? "6 Months" : pack.package_type}}</b></h1></div>
+                        </div>
+                        <div class="card-footer text-white clearfix small z-1">
+                          <div  class="main-title float-center center-section" >
+                            <button v-on:click="buySubscription(pack)" class="btn btn-lg btn-block btn-dark pl-4 pt-1 mb-2">SUBSCRIBE</button> &nbsp; &nbsp;
+                          </div>
+                        </div>
                       </div>
-                      <div class="text-center"><h1><b>${{pack.amount}}</b></h1></div>
-                      <div class="text-center"><h1><b>{{pack.package_type}}</b></h1></div>
-                    </div>
-                    <div class="card-footer text-white clearfix small z-1">
-                      <div  class="main-title float-center center-section">
-                        <button v-on:click="buySubscription(pack)" class="btn btn-lg btn-block btn-primary pl-4 pt-1 mb-2">Buy Now</button> &nbsp; &nbsp;
-                      </div>
-
                     </div>
                   </div>
+                  <div v-else class="row">
+                    <div class="col-md-12 mb-12">
 
+                      <div class="card text-white bg-dark o-hidden h-100 border-none " style="background:black;" >
+                        <div class="card-body">
+                          <div class="card-body-icon">
+                            <i class="fas fa-fw fa-play-circle"></i>
+                          </div>
+                          <div class="text-center"><h1><b>{{ pack.amount }} RF</b></h1></div>
+                          <div class="text-center"><h1><b>{{pack.package_type === "Quarter" ? "6 Months" : pack.package_type}}</b></h1></div>
+                        </div>
+                        <div class="card-footer text-white clearfix small z-1">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <div class="progress" v-if="processing">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">Processing Payment</div>
+                              </div>
+                              <div v-if="info">
+                                <div v-html="message(info_type,info_title,info_message)"></div>
+                              </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                              <div class="form-group">
+                                <label for="payment_method">Payment Type</label>
+                                <select class="custom-select" id="payment_method" v-model="payment_method" style="color: white;">
+                                  <option value="RwandaMobile" selected>Rwanda Mobile Payment</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-lg-6">
+                              <div class="form-group">
+                                <label for="phone">Telephone Number</label>
+                                <input v-model="phone" type="text" style="color: white;"
+                                       placeholder="Start with 0" id="phone"
+                                       class="form-control" v-on:keyup="resetNumber()">
+                              </div>
+                            </div>
+
+                          </div>
+                          <div  class="main-title float-center center-section text-center" v-if="!waiting">
+                            <button v-on:click="proceedSubscription(pack)" class="btn btn-lg btn-block btn-primary pl-4 pt-1 mb-2">BUY</button> &nbsp; &nbsp;
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div class="modal-footer float-center">
+                  <button v-if="selectedSubscription" v-on:click="selectedSubscription = false" class="btn  btn btn-success"><i class="fa fa-arrow-left"></i> BACK</button> &nbsp; &nbsp;
                   <button class="btn btn-danger" id="cancelSubscription" type="button" data-dismiss="modal"   ref="myBtn1">Cancel</button>
                 </div>
             </div>
@@ -170,6 +220,8 @@
     import Plyr from 'plyr';
     /* eslint-disable */
     import {mapGetters} from "vuex";
+    import store from '@/store'
+    import Dinero$1 from 'dinero.js'
     /* eslint-disable */
     export default {
       name: "UserMovieDetails",
@@ -221,7 +273,23 @@
           seekStart: null,
           subscribed: false,
           pack: [],
+          packs: [],
           trackTimeFlag: 0,
+          selectedSubscription: false,
+          phone: '07',
+          payment_method: '',
+          //Handling errors
+          info: false,
+          info_type: '',
+          info_title: '',
+          info_message: '',
+
+          //process and loading
+          processing: false,
+          //count  down for waiting payment
+          countDown : 60,
+          //waiting for confirmation
+          waiting:false
         }
       },
       async beforeRouteUpdate(to,from ,next){
@@ -238,8 +306,36 @@
         next()
       },
       methods: {
+        countDownTimer() {
+          let myMessage = window.message
+          this.waiting = true
+          if(this.countDown > 0) {
+            setTimeout(() => {
+              this.countDown -= 1
+              this.info_message = myMessage + " Try again in: " +this.countDown
+              this.countDownTimer()
+            }, 1000)
+          }else{
+            this.waiting = false
+            console.log("Done")
+          }
+        },
+        resetNumber(){
+          if(this.phone.length < 2){
+            this.phone = '07'
+          }
+          if(this.phone.length !== 10){
+            this.info = true
+            this.info_type = 'danger'
+            this.info_title = 'error:'
+            this.info_message = 'Telephone numbers must be 10 digits.'
+          }else{
+            this.info = false
+          }
+        },
         buySubscription(pack){
-
+          this.pack = pack
+          this.selectedSubscription = true
         },
         async getNextMovies(){
           const latestMoviesData = {
@@ -360,6 +456,54 @@
           //get movie cover
 
         },
+        async proceedSubscription(pack){
+          if(this.phone.length !== 10){
+            this.info = true
+            this.info_type = 'danger'
+            this.info_title = 'error:'
+            this.info_message = 'Telephone numbers must be 10 digits.'
+          }else{
+            this.info = false
+            let userID = store.getters['auth/user'].id
+            const data = {
+              "subscription" : {
+                "package_id" : pack.id,
+                "telephoneNumber" : this.phone,
+                "user_id" : userID,
+                "amount": pack.amount
+              }
+            }
+            this.processing = true
+            this.waiting = true
+            axios.post('subscriptions',data).then(res => {
+              this.processing = false
+
+              if(res.data.success){
+                this.info = true
+                this.info_type = 'success'
+                this.info_title = 'Wow!:'
+                window.message = res.data.message
+                this.countDownTimer()
+
+              }else{
+                this.waiting = false
+                this.info = true
+                this.info_type = 'danger'
+                this.info_title = 'error:'
+                this.info_message = res.data.message
+              }
+            }).catch(error => {
+              this.processing = false
+              this.waiting = false
+              console.log(error)
+              this.info = true
+              this.info_type = 'danger'
+              this.info_title = 'error:'
+              this.info_message = error.response.data
+            })
+          }
+
+        },
         moment(date) {
           return moment(date).format('MMMM Do YYYY, h:mm:ss a');
         },
@@ -369,9 +513,14 @@
           $('#showPopup').click()
           if (this.trackTimeFlag === 2){
             //console.log("times")
+            this.processing = true
             axios.get('packages').then(res => {
-              this.pack = res.data.packages[0]
-              console.log(this.pack)
+              this.processing = false
+              this.packs = res.data.packages
+
+            }).catch(error =>{
+              console.log(error)
+              this.processing = false
             })
           }
 
@@ -396,6 +545,7 @@
                   this.seekStart = this.previousTime
                 }
               });
+
               this.player.on('seeked', event => {
                 const instance = event.detail.plyr
                 if(this.currentTime > this.seekStart) {
@@ -404,13 +554,18 @@
                 }
                 this.seekStart = null;
               });
+
             }else{
 
             }
           }).catch(err => {
             console.log(err)
           })
+        },
+        message(type,title,message){
+          return '<div class="alert alert-'+type+' alert-dismissible fade show" role="alert"><strong style="font-size: 20px;">'+title+'</strong> <span style="font-size: 20px;">'+message+'</span></div>'
         }
+
       },
     }
 

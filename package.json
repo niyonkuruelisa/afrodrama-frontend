@@ -16,6 +16,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "dinero.js": "^1.8.1",
     "jquery": "3.3.1",
     "jquery-slim": "3.0.0",
     "jquery-ui": "^1.12.1",

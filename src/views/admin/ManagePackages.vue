@@ -100,11 +100,11 @@
                         <div class="card-body-icon">
                           <i class="fas fa-fw fa-money-bill"></i>
                         </div>
-                        <div class="text-center"><h1><b>${{pack.amount}}</b></h1></div>
-                        <div class="text-center"><h1><b>{{pack.name === "Quarter" ? "6 Months" : pack.name}}</b></h1></div>
+                        <div class="text-center"><h1><b>{{pack.amount}} RF</b></h1></div>
+                        <div class="text-center"><h1><b>{{pack.name}}</b></h1></div>
                       </div>
                       <a class="card-footer text-white clearfix small z-1" href="#">
-                        <h5 class="text-center">{{pack.package_type}}</h5>
+                        <h5 class="text-center">{{pack.package_type === "Quarter" ? "6 Months" : pack.package_type}}</h5>
                         <div  class="main-title float-center center-section">
                           <button v-on:click="showEditPackageSection(pack)" class="btn btn-block btn-dark pl-4 pt-1 mb-2">Edit This Package</button> &nbsp; &nbsp;
                         </div>
