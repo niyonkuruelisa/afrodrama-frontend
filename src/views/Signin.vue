@@ -86,25 +86,7 @@ import 'jquery-slim'
 import 'jquery-ui'
 /* eslint-disable */
 import '../assets/styles/js/custom.js'
-setTimeout(function () {
-     // Login Owl Carousel
-    const mainslider = $('.owl-carousel-login');
-    if (mainslider.length > 0) {
-        mainslider.owlCarousel({
-        items: 1,
-        lazyLoad: true,
-        loop: true,
-        autoplay: true,
-        autoplaySpeed: 1000,
-        autoplayTimeout: 2000,
-        autoplayHoverPause: true,
-        navigation : true,
-        });
-    }
-}, 555*1.33); // 555ms timing to load jQuery.js + network estimated delay
 
-
- 
 /* eslint-disable */
 
 import { mapActions } from 'vuex'
