@@ -402,14 +402,14 @@
           if(this.movie.movie_covers[i].type === "landscape"){
 
             fileURL = this.movie.movie_covers[i].url
-
+            const intel = setInterval(function () {
+              $('#MoviePreview').html('<img class="imgplace" src="' + fileURL + '" />')
+              clearInterval(intel);
+            }, 1)
           }
         }
         this.thumbnailLandscapeSize = bytesToSize(this.thumbnailLandscapeUpload.size, 1)
-        const intel = setInterval(function () {
-          $('#MoviePreview').html('<img class="imgplace" src="' + fileURL + '" />')
-          clearInterval(intel);
-        }, 1)
+
 
         const form = new FormData()
         form.append('movie', file)
