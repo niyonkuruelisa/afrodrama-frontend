@@ -396,7 +396,15 @@
         if (!file) return;
 
         // load image
-        let fileURL = this.movie.movie_covers[1].url
+        let fileURL = ""
+        for(let i =0; i < this.movie.movie_covers.length; i++){
+
+          if(this.movie.movie_covers[i].type === "landscape"){
+
+            fileURL = this.movie.movie_covers[i].url
+
+          }
+        }
         this.thumbnailLandscapeSize = bytesToSize(this.thumbnailLandscapeUpload.size, 1)
         const intel = setInterval(function () {
           $('#MoviePreview').html('<img class="imgplace" src="' + fileURL + '" />')

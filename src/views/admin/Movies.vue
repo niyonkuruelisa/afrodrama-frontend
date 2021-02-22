@@ -129,11 +129,8 @@
               console.log("movie cover:" +  this.movie_cover)
 
           }
-          console.log("movie cover:" +  this.movie_cover)
 
         }
-        //get movie cover
-        console.log(movieResponse.data.movies)
       },
       // get current user function
       async getCurrentUser(){
