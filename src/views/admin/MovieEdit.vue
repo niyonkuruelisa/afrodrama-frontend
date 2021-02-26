@@ -136,7 +136,6 @@
                     </div>
                     <div class="osahan-desc">{{thumbnailPortraitUploadingMessage}}</div>
                   </div>
-
                   <div class="col-lg-12">
                     <div class="form-group">
                       <label for="moviePortraitArtButton">Choose Landscape Art</label>
@@ -168,7 +167,6 @@
                 <button v-on:click="showCoversSection()" class="btn btn-outline-primary">Save Changes</button>
               </div>
               <hr>
-
             </div>
             <div  v-if="editInfo" class="col-lg-12">
               <div class="osahan-form">

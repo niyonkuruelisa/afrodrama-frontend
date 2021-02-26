@@ -483,7 +483,9 @@
                 this.info_type = 'success'
                 this.info_title = 'Wow!:'
                 window.message = res.data.message
+                this.countDown = 60
                 this.countDownTimer()
+                this.checkForResponse()
 
               }else{
                 this.waiting = false
@@ -506,6 +508,11 @@
         },
         moment(date) {
           return moment(date).format('MMMM Do YYYY, h:mm:ss a');
+        },
+        async checkForResponse(){
+          setTimeout(() => {
+
+          }, 5000)
         },
         async showPupUp(){
           this.trackTimeFlag++
