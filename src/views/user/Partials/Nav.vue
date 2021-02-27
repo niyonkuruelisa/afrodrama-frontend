@@ -30,8 +30,8 @@
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
           <!-- <a class="dropdown-item" href="account.html"><i class="fas fa-fw fa-user-circle"></i> &nbsp; My
-            Account</a>
-          <a class="dropdown-item" href="settings.html"><i class="fas fa-fw fa-cog"></i> &nbsp; Settings</a> -->
+            Account</a>-->
+          <router-link class="dropdown-item" :to="{ name: 'UserSettings'}"><i class="fas fa-fw fa-cog"></i> &nbsp; Settings</router-link>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#" @click="logout"><i
                   class="fas fa-fw fa-sign-out-alt"></i> &nbsp; Logout</a>

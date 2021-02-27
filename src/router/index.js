@@ -3,10 +3,13 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import SignIn from '@/views/Signin'
 import SignUp from '@/views/SignUp'
+//user
 import Home from '@/views/user/Home'
 import UserMovieDetails from '@/views/user/MovieDetails'
 import UserBrowseMovies from '@/views/user/BrowseMovies'
 import SearchMovies from '@/views/user/SearchMovies'
+import UserSettings from '@/views/user/UserSettings'
+//admin
 import AdminHome from '@/views/admin/Home'
 import AdminUpload from '@/views/admin/Upload'
 import MoviesManagement from '@/views/admin/Movies'
@@ -79,12 +82,17 @@ const routes = [
     path: '/movies/search/:query',
     name: 'SearchMovies',
     component: SearchMovies,
-    beforeEnter: (to,from,next) => {
-      if(!store.getters['auth/authenticated']){
-        return next({name: 'Login'})
-      }
-      next()
-    },
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/settings',
+    name: 'UserSettings',
+    component: UserSettings,
+    meta: {
+      requiresAuth: true
+    }
   },
     //------------------------------------ Admin Routes ----------------------------------->
   {
