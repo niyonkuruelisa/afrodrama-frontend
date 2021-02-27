@@ -29,8 +29,8 @@
           {{user.first_name}} {{user.last_name}}
         </a>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-          <!-- <a class="dropdown-item" href="account.html"><i class="fas fa-fw fa-user-circle"></i> &nbsp; My
-            Account</a>-->
+          <router-link class="dropdown-item" :to="{ name: 'UserProfile'}"><i class="fas fa-fw fa-user-circle"></i> &nbsp; My
+            Account</router-link>
           <router-link class="dropdown-item" :to="{ name: 'UserSettings'}"><i class="fas fa-fw fa-cog"></i> &nbsp; Settings</router-link>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#" @click="logout"><i

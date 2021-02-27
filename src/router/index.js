@@ -9,6 +9,7 @@ import UserMovieDetails from '@/views/user/MovieDetails'
 import UserBrowseMovies from '@/views/user/BrowseMovies'
 import SearchMovies from '@/views/user/SearchMovies'
 import UserSettings from '@/views/user/UserSettings'
+import UserProfile from '@/views/user/UserProfile'
 //admin
 import AdminHome from '@/views/admin/Home'
 import AdminUpload from '@/views/admin/Upload'
@@ -82,6 +83,14 @@ const routes = [
     path: '/movies/search/:query',
     name: 'SearchMovies',
     component: SearchMovies,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/profile',
+    name: 'UserProfile',
+    component: UserProfile,
     meta: {
       requiresAuth: true
     }
